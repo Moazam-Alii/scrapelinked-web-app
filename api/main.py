@@ -108,5 +108,6 @@ def oauth2callback():
 
     return redirect(url_for("start"))
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# Needed for Vercel
+def handler(environ, start_response):
+    return app(environ, start_response)
