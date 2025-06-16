@@ -109,3 +109,5 @@ def oauth2callback():
 
     return redirect(url_for("start"))
 
+#if __name__ == "__main__":
+ #   app.run(debug=True)
