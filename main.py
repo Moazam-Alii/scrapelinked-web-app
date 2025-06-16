@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 import requests, os
 from urllib.parse import urlencode
 from dotenv import load_dotenv
-
+#import subprocess
 load_dotenv()
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
@@ -108,6 +109,5 @@ def oauth2callback():
 
     return redirect(url_for("start"))
 
-# Needed for Vercel
-def handler(environ, start_response):
-    return app(environ, start_response)
+if __name__ == "__main__":
+    app.run(debug=True)
