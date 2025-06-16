@@ -4,20 +4,21 @@ from urllib.parse import urlencode
 from dotenv import load_dotenv
 #import subprocess
 load_dotenv()
-from flask_session import Session
+#from flask_session import Session
 
 
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "your-default-dev-key")
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 WORKER_URL = os.getenv("WORKER_URL")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SESSION_PERMANENT"] = False
-Session(app)
+#app.config["SESSION_TYPE"] = "filesystem"
+#app.config["SESSION_PERMANENT"] = False
+#Session(app)
 
 @app.route("/", methods=["GET", "POST"])
 def start():
