@@ -13,16 +13,22 @@
 
 <div class="container">
     <h1>🔗 Add LinkedIn Posts</h1>
-    <p>Paste the LinkedIn post URLs below to scrape and insert them into your Google Doc.</p>
+    <p>Paste the LinkedIn post URLs below to scrape and insert them into your Google Doc or view them here.</p>
 
     <a href="{{ url_for('authorize') }}" class="authorize-btn">🔄 Re-authorize Google Access</a>
 
-    <form method="POST" onsubmit="showLoading()">
+    <form id="scrapeForm" onsubmit="handleSubmit(event)">
         {% for i in range(num_urls) %}
             <label for="linkedin_url_{{i}}">LinkedIn Post URL {{i+1}}:</label>
             <input type="url" name="linkedin_urls" id="linkedin_url_{{i}}" placeholder="https://www.linkedin.com/posts/..." required>
         {% endfor %}
-        <button type="submit">➕ Add All to Google Doc</button>
+
+        <label>
+            <input type="checkbox" id="show_on_web" name="show_on_web">
+            📄 Show scraped posts on web only (do not add to Google Doc)
+        </label>
+
+        <button type="submit">➕ Process LinkedIn Posts</button>
     </form>
 
     <form method="GET" action="{{ url_for('start') }}">
@@ -70,6 +76,30 @@
     <script>
         function showLoading() {
             document.getElementById('loadingOverlay').classList.add('visible');
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            showLoading();
+
+            const urls = Array.from(document.querySelectorAll("input[name='linkedin_urls']"))
+                            .map(input => input.value)
+                            .filter(url => url.length > 0);
+            const showOnWeb = document.getElementById("show_on_web").checked;
+
+            const response = await fetch("/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    linkedin_urls: urls,
+                    show_on_web: showOnWeb
+                })
+            });
+
+            const result = await response.json();
+            window.location.reload(); // Or dynamically render results based on `result`
         }
     </script>
 </div>

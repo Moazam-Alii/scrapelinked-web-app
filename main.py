@@ -35,14 +35,21 @@ def start():
 def add_post():
     doc_link = None
     post_data = None
+    num_urls = session.get("num_urls", 1)
 
     if request.method == "POST":
-        urls = request.form.getlist("linkedin_urls")
+        # Check if the request is JSON (from fetch in new HTML)
+        if request.is_json:
+            data = request.get_json()
+            urls = data.get("linkedin_urls", [])
+            show_on_web = data.get("show_on_web", False)
+        else:
+            urls = request.form.getlist("linkedin_urls")
+            show_on_web = session.get("output_option") == "show_on_web"
+
         if not urls:
             flash("❌ Please enter at least one LinkedIn post URL.", "error")
-            return render_template("add_post.html", num_urls=session.get("num_urls", 1))
-
-        show_on_web = session.get("output_option") == "show_on_web"
+            return render_template("add_post.html", num_urls=num_urls)
 
         payload = {
             "linkedin_urls": urls,
@@ -75,10 +82,11 @@ def add_post():
 
     return render_template(
         "add_post.html",
-        num_urls=session.get("num_urls", 1),
+        num_urls=num_urls,
         doc_link=doc_link,
         post_data=post_data
     )
+
 
 
 @app.route("/authorize")
