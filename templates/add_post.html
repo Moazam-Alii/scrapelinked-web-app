@@ -43,6 +43,22 @@
         </div>
     {% endif %}
 
+    {% if post_data %}
+        <div class="scraped-posts">
+            <h2>📝 Scraped Post Content</h2>
+            {% for post in post_data %}
+                <div class="scraped-post">
+                    <h3>{{ post.heading }}</h3>
+                    <p>{{ post.cleaned_text }}</p>
+                    {% if post.insights %}
+                        <p><strong>Insights:</strong> {{ post.insights }}</p>
+                    {% endif %}
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- Scraping Animation Loader -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="scraping-loader">
