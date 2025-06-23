@@ -13,22 +13,22 @@
 
 <div class="container">
     <h1>🔗 Add LinkedIn Posts</h1>
-    <p>Paste the LinkedIn post URLs below to scrape and insert them into your Google Doc or view them here.</p>
+    <p>Paste the LinkedIn post URLs below to scrape and either insert them into your Google Doc or view them here.</p>
 
     <a href="{{ url_for('authorize') }}" class="authorize-btn">🔄 Re-authorize Google Access</a>
 
-    <form id="scrapeForm" onsubmit="handleSubmit(event)">
+    <form id="scrapeForm" method="POST" action="{{ url_for('add_post') }}">
         {% for i in range(num_urls) %}
             <label for="linkedin_url_{{i}}">LinkedIn Post URL {{i+1}}:</label>
             <input type="url" name="linkedin_urls" id="linkedin_url_{{i}}" placeholder="https://www.linkedin.com/posts/..." required>
         {% endfor %}
 
-        <label>
-            <input type="checkbox" id="show_on_web" name="show_on_web">
-            📄 Show scraped posts on web only (do not add to Google Doc)
-        </label>
+        <input type="hidden" name="output_target" id="output_target">
 
-        <button type="submit">➕ Process LinkedIn Posts</button>
+        <div class="button-row">
+            <button type="submit" onclick="setOutputTarget('web')">🖥️ Add to Web App</button>
+            <button type="submit" onclick="setOutputTarget('doc')">📝 Add to Google Doc</button>
+        </div>
     </form>
 
     <form method="GET" action="{{ url_for('start') }}">
@@ -78,28 +78,9 @@
             document.getElementById('loadingOverlay').classList.add('visible');
         }
 
-        async function handleSubmit(event) {
-            event.preventDefault();
+        function setOutputTarget(target) {
+            document.getElementById("output_target").value = target;
             showLoading();
-
-            const urls = Array.from(document.querySelectorAll("input[name='linkedin_urls']"))
-                            .map(input => input.value)
-                            .filter(url => url.length > 0);
-            const showOnWeb = document.getElementById("show_on_web").checked;
-
-            const response = await fetch("/add", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    linkedin_urls: urls,
-                    show_on_web: showOnWeb
-                })
-            });
-
-            const result = await response.json();
-            window.location.reload(); // Or dynamically render results based on `result`
         }
     </script>
 </div>
