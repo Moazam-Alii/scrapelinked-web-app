@@ -59,6 +59,14 @@
                     {% if post.insights %}
                         <p><strong>Insights:</strong> {{ post.insights }}</p>
                     {% endif %}
+
+                    {% if post.failed_links %}
+                        <div class="post-images">
+                            {% for img in post.failed_links %}
+                                <img src="{{ img }}" alt="LinkedIn image" style="max-width: 300px; margin: 10px 0;"><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <hr>
                 </div>
             {% endfor %}
