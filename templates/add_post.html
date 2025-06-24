@@ -52,7 +52,6 @@
     {% if post_data %}
     <div class="scraped-posts">
         <h2>📝 Scraped Post Content</h2>
-        <button class="secondary" onclick="copyAllPosts()">📋 Copy All Posts</button><br><br>
 
         {% for post in post_data %}
             <div class="scraped-post">
@@ -80,6 +79,7 @@
                     <p><strong>Image Links:</strong></p>
                     {% for link in post.failed_links %}
                         <a href="{{ link }}" target="_blank">{{ link }}</a><br>
+                        <button class="secondary" onclick="copyAllPosts()">📋 Copy All Posts</button><br><br>
                     {% endfor %}
                 {% endif %}
                 <hr>
