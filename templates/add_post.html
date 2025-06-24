@@ -50,27 +50,42 @@
     {% endif %}
 
     {% if post_data %}
-        <div class="scraped-posts">
-            <h2>📝 Scraped Post Content</h2>
-            {% for post in post_data %}
-                <div class="scraped-post">
-                    <h3>{{ post.heading }}</h3>
-                    <p>{{ post.cleaned_text }}</p>
-                    {% if post.insights %}
-                        <p><strong>Insights:</strong> {{ post.insights }}</p>
-                    {% endif %}
+       {% if post_data %}
+    <div class="scraped-posts">
+        <h2>📝 Scraped Post Content</h2>
+        {% for post in post_data %}
+            <div class="scraped-post">
+                <h3>{{ post.heading }}</h3>
 
-                    {% if post.failed_links %}
-                        <div class="post-images">
-                            {% for img in post.failed_links %}
-                                <img src="{{ img }}" alt="LinkedIn image" style="max-width: 300px; margin: 10px 0;"><br>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <hr>
-                </div>
-            {% endfor %}
-        </div>
+                {% if post.insights %}
+                    <p><strong>Insights:</strong></p>
+                    <ul>
+                        {% for line in post.insights.splitlines() %}
+                            {% if line.strip() %}
+                                <li>{{ line }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <p>{{ post.cleaned_text }}</p>
+
+                {% if post.image_urls %}
+                    <p><strong>Images:</strong></p>
+                    {% for img_url in post.image_urls %}
+                        <img src="{{ img_url }}" alt="Scraped image" style="max-width: 300px; margin: 10px 0;"><br>
+                    {% endfor %}
+                {% elif post.failed_links %}
+                    <p><strong>Image Links:</strong></p>
+                    {% for link in post.failed_links %}
+                        <a href="{{ link }}" target="_blank">{{ link }}</a><br>
+                    {% endfor %}
+                {% endif %}
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
     {% endif %}
 
     <!-- Scraping Animation Loader -->
