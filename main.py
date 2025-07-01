@@ -35,10 +35,10 @@ def start():
 def add_post():
     doc_link = None
     post_data = None
+    cumulative_title = None  # ✅ NEW
     num_urls = session.get("num_urls", 1)
 
     if request.method == "POST":
-        # Check if the request is JSON (from fetch in new HTML)
         if request.is_json:
             data = request.get_json()
             urls = data.get("linkedin_urls", [])
@@ -72,6 +72,7 @@ def add_post():
                 data = response.json()
                 if show_on_web:
                     post_data = data.get("posts", [])
+                    cumulative_title = data.get("cumulative_title", "Scraped LinkedIn Posts")  # ✅ NEW
                 else:
                     doc_link = data.get("doc_link")
                     flash("✅ Posts added successfully!", "success")
@@ -84,9 +85,9 @@ def add_post():
         "add_post.html",
         num_urls=num_urls,
         doc_link=doc_link,
-        post_data=post_data
+        post_data=post_data,
+        cumulative_title=cumulative_title  # ✅ NEW
     )
-
 
 
 @app.route("/authorize")
